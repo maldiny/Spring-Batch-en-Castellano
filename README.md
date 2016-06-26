@@ -19,5 +19,5 @@ Además de marcar unas directrices para el diseño de procesos, Spring Batch pro
 
 Los procesos batch (o procesos por lotes) acostumbran a ser aquellos programas que se lanzan  bajo una determinada planificación y por lo tanto no requieren ningún tipo de intervención humana. Suelen ser procesos relativamente pesados, que tratan una gran cantidad de información, por lo que normalemente se ejecutan en horarios con baja carga de trabajo para no influir en el entorno transaccional.
 
-(https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/a1/assets/above-the-fold-1.png)
+    ![Controller Using "Above the Fold"](https://raw.githubusercontent.com/johnpapa/angular-styleguide/master/a1/assets/above-the-fold-1.png)
 
