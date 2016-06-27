@@ -66,6 +66,30 @@ Destacar los siguientes campos relevantes:
 executionContext.putLong(getKey(LINES_READ_COUNT), reader.getPosition());
 ```
 
+```java
+long lineCount = executionContext.getLong(getKey(LINES_READ_COUNT);
+```
+
+Se puede recuperar el ExecutionContext en cualquier punto de la ejecución de un batch del siguiente modo:
+
+```java
+ExecutionContext ecStep = stepExecution.getExecutionContext(); 
+ExecutionContext ecJob = jobExecution.getExecutionContext(); 
+```
+
+### JobRepository
+**JobRepository** es el mecanismo de persistencia para todos los elementos que forman un batch. El JobRepository provee de operaciones para la gestión del JobLauncher, Job y los Steps del batch.
+
+En el momento en el que un Batch se ejecuta por primera vez, se genera un JobExecution a través del JobRepository y durante su ejecución los datos generados en los StepExecutions y JobExecution se persisten a través del JobRepository.
+
+```xml
+<job-repository id="jobRepository"/>
+```
+
+El JobRepository será el elemento que permitirá persistir la información referente a la ejecución del batch en la base de datos.
+
+**[Back to top](#Índice)**
+
 ## Configuración a nivel de job
 
 ## Configuración a nivel de step
