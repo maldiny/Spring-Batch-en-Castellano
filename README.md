@@ -628,7 +628,19 @@ Esta consola **permite** realizar las siguientes operativas:
 
 TODO: Imagen
 
-[Absolute README link](https://github.com/username/repo/blob/branch/docs/more_words.md)
+**[Ir al índice](#Índice)**
+
+## Referencias
+
+* [Introducing Spring Batch - Dave Sayer - Spring Source](https://github.com/username/repo/blob/branch/docs/more_words.md)
+* [Spring Batch Reference Documentation 3.0 - Lucas Ward - Pivotal](https://github.com/username/repo/blob/branch/docs/more_words.md)
+* [Spring Batch Admin User Guide - Lucas Ward - Pivotal](https://github.com/username/repo/blob/branch/docs/more_words.md)
+* [Spring Batch - Reference Documentation](http://docs.spring.io/spring-batch/reference/html/)
+* [Transactions in Spring Batch – Part 1: The Basics](https://blog.codecentric.de/en/2012/03/transactions-in-spring-batch-part-1-the-basics/)
+* [Transactions in Spring Batch – Part 2: Restart, cursor based reading and listeners](https://blog.codecentric.de/en/2012/03/transactions-in-spring-batch-part-2-restart-cursor-based-reading-and-listeners/)
+* [Transactions in Spring Batch – Part 3: Skip Retry](https://blog.codecentric.de/en/2012/03/transactions-in-spring-batch-part-3-skip-and-retry/)
+* [Ejemplos de Spring Batch](https://github.com/username/repo/blob/branch/docs/more_words.md)
+* [Introducing Spring Batch - Dave Sayer - Spring Source](https://github.com/username/repo/blob/branch/docs/more_words.md)
 
 **[Ir al índice](#Índice)**
 
