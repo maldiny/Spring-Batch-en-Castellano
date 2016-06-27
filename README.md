@@ -456,16 +456,179 @@ Spring Batch facilita utilidades para realizar la lectura y escritura de informa
 </bean>
 ```
 
+### Entrada desde varios ficheros
+
+Es un requisito habitual procesar varios ficheros como entrada de un único Step. Si asumimos que todos los ficheros tienen el mismo formato, **MultiResourceItemReader** permite realizar este tipo de entrada tanto para XML como para un FlatFileItemReader.
+
+```xml
+<bean id="multiResourceReader" class="org.spr...MultiResourceItemReader">
+    <property name="resources" value="classpath:data/input/file-*.txt" />
+    <property name="delegate" ref="flatFileItemReader" />
+</bean>
+```
+
+Este ejemplo se apoyará en el uso de un **FlatFileItemReader**. Esta configuración de entrada para ambos ficheros, maneja tanto el rollback como el reinicio del step de manera controlada.
+
+Se recomienda que cada Job trabaje con su propio **directorio de forma individual** hasta que se complete la ejecución.
+
+### Database ItemReaders y ItemWriters
+
+En la mayoría de sistemas corporativos, los datos se alojan en sistemas de persistencia basados en bases de datos. A continuación se detallan los principales componentes disponibles:
+
+```xml
+<bean id="itemReader" class="org.spr...JdbcCursorItemReader">
+   <property name="dataSource" ref="dataSource" />
+   <property name="sql" value="select ID, NAME, CREDIT from CUSTOMER" />
+   <property name="rowMapper"> <bean class="org.springframework.batch.sample.domain.CustomerCreditRowMapper" /> </property>
+</bean>
+```
+
+* **JdbcCursorItemReader:** Lee de un cursor de base de datos a través de JDBC.
+* **HibernateCursorItemReader:** Lee de un cursor de base de datos a través de HQL.
+* **StoredProcedureItemReader:** Lee de un cursor de base de datos a través de un proceso almacenado (ej: PL/SQL).
+* **JdbcPagingItemReader:** A partir de una sentencia SQL, pagina los resultados que pueden leerse sin verse afectada la memoria del proceso ante grandes volúmenes de datos.
+* **JpaPagingItemReader:** A partir de una sentencia JSQL, pagina los resultados que pueden leerse sin verse afectada la memoria del proceso ante grandes volúmenes de datos.
+* **IbatisPagingItemReader:** A partir de una sentencia iBATIS, pagina los resultados que pueden leerse sin verse afectada la memoria del proceso ante grandes volúmenes de datos.
+* **HibernatePagingItemReader:** Lee a partir de una sentencia HQL paginada.
+* **MongoItemReader:** A partir de un operador de mongo y una sentencia JSON válida de MongoDB, realiza la lectura de elementos de la base de datos.
+
+### Database ItemReaders y ItemWriters
+
+Los **ItemWriters** definirán el modo en el que la información tras ser procesada será almacenada en los sistemas de persistencia.
+
+```xml
+<bean id="databaseItemWriter" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+	<property name="dataSource" ref="dataSource" />
+	<property name="sql">
+    		<value>
+			<![CDATA[ insert into EXAM_RESULT(STUDENT_NAME, DOB, PERCENTAGE) values (?, ?, ?)]]>
+    		</value>
+	</property>
+	<property name="ItemPreparedStatementSetter">
+    		<bean class="com.everis.....CustomItemSetter" />
+	</property>
+</bean>
+```
+
+* **HibernateItemWriter:** Utiliza una sesión de hibernate para manejar la transaccionalidad de la persistencia de la información.
+* **JdbcBatchItemWriter:** Utiliza sentencias de tipología PreparedStatement y puede utilizar steps rudimentarios para localizar fallos en la persistencia de la información.
+* **JpaItemWriter:** Utiliza un EntityManager de JPA para poder manejar la transaccionalidad en la persistencia de la información. 
+* **MongoItemWriter:** A partir de un objeto de tipo MongoOperations, permite realizar la persistencia de la información en bases de datos MongoDB. La escritura de la información se retrasa hasta el último momento antes de realizar la validación de la persistencia de la información.
+
+### ItemReaders y ItemWriters customizados
+
+Una vez vistos los distintos componentes genéricos facilitados por Spring Batch, hay muchos escenarios que pueden no estar cubiertos por estas implementaciones. En estos casos podremos crear nuestras implementaciones customizadas de **ItemReader** e **ItemWriter**.
+
+* **Custom ItemReader**
+
+Bean que realizará la obtención de la información cuya implementación será definida por el usuario.
+Implementa la interfaz ItemReader<T> cuyo método read que obtendrá los objetos a tratar durante la fase de escritura.
+
+```java
+public class CustomReader implements ItemReader<MyObject> {
+
+	@Override
+	public MyObject read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
+		// TODO Auto-generated method stub		
+return null;
+}
+}
+```
+
+* **Custom ItemWriter**
+
+Bean que realizará la persistencia de la información cuya implementación será definida por el usuario.
+Implementa la interfaz ItemWriter<T> cuyo método write recibirá el listado de objetos a tratar durante la fase de escritura.
+
+```java
+public class CustomWriter implements ItemWriter<MyObject> {
+
+	@Override
+	public void write(List<? extends MyObject> items) throws Exception {
+// TODO Auto-generated method stub
+	}
+}
+```
 
 **[Ir al índice](#Índice)**
 
 ## Escalado y paralelización
 
+### Steps multihilo
+
+Para configurar la ejecución de un mismo step por varios hilos la forma más simple es la creación de un pool de hilos mediante la configuración de un TaskExecutor. Su definición se realizará del siguiente modo:
+
+```xml
+<step id="step1">
+    <tasklet 
+         task-executor="taskExecutor"
+  throttle-limit="20">
+….
+….
+    </tasklet>
+</step>
+```
+
+La implementación del objeto "taskExecutor" podrá cualquier implementación de la interfaz TaskExecutor, por ejemplo, **SimpleAsyncTaskExecutor**.
+
+En este caso, cada hilo realizará la ejecución del mismo step de forma independiente, pudiendo realizarse el procesado de elementos de manera no consecutiva. En algunas situaciones será necesario limitar el número de hilos, para ello se especificará el parámetro **throttle-limit**.
+
+**IMPORTANTE: Verificar que los componentes utilizados sean “thread safe” y se puedan utilizar en steps multihilo.**
+
+### Steps paralelos
+
+En la definición de la estructura de determinados batchs es posible identificar cierta lógica u operativa que es necesaria **paralelizar**. Para ello es posible particionar y delegar responsabilidades de la operativa asignándoles **steps individuales** que poder paralelizar en un único proceso. La **configuración** necesaria para poder paralelizar steps sería la siguiente:
+
+```xml
+<job id="job1">
+ <split id="split1" task-executor="taskExecutor" next="step4">
+ <flow>
+ <step id="step1" parent="s1" next="step2"/>
+ <step id="step2" parent="s2"/>
+</flow>
+ <flow>
+ <step id="step3" parent="s3"/>
+ </flow>
+ </split>
+</job>
+<beans:bean id="taskExecutor" class="org.spr...SimpleAsyncTaskExecutor"/>
+```
+
+Como se puede ver en el código, es necesario realizar la definición de un elemento "taskExecutor" que hace referencia a la implementación del **TaskExecutor** a emplear para ejecutar cada uno de los flujos de trabajo.
+
+SyncTaskExecutor es la implementación por defecto de TaskExecutor. 
+
+**El job no finalizará su estado como completo hasta que puede agregar el estado de salida de cada uno de los flujos.**
+
+### Remote chunking
+
+La técnica denominada **Remote chunking** consiste en derivar el procesado del step a través de múltiples procesos remotos comunicados entre sí a través de un middleware. El patrón del sistema sería el siguiente:
+
+TODO: Imagen
+
+El **máster** sustituye el ItemWriter por una versión que realiza el envío de elementos al middleware, mientras que los **esclavos** sustituyen el ItemReader por listeners al middleware para procesar los elementos.
 
 **[Ir al índice](#Índice)**
 
 ## Otros
 
+### Spring Batch Admin
+
+**Spring Batch Admin** como su nombre indica es una Consola Web (Spring MVC) de Administración para aplicaciones y sistemas Spring Batch. 
+
+TODO: Imagen
+
+Esta consola **permite** realizar las siguientes operativas:
+
+* Consultar el estado de los jobs.
+* Lanzar la ejecución de jobs.
+* Ver el estado de una ejecución.
+* Ver el detalle de una ejecución y sus pasos.
+* Detener una ejecución.
+
+TODO: Imagen
+
+[Absolute README link](https://github.com/username/repo/blob/branch/docs/more_words.md)
 
 **[Ir al índice](#Índice)**
 
