@@ -19,6 +19,8 @@ Además de marcar unas directrices para el diseño de procesos, Spring Batch pro
 
 Los procesos batch (o procesos por lotes) acostumbran a ser aquellos programas que se lanzan  bajo una determinada planificación y por lo tanto no requieren ningún tipo de intervención humana. Suelen ser procesos relativamente pesados, que tratan una gran cantidad de información, por lo que normalemente se ejecutan en horarios con baja carga de trabajo para no influir en el entorno transaccional.
 
+**[Ir al índice](#Índice)**
+
 ## Elementos de un batch
 Spring Batch nos propone un diseño como el que se puede apreciar en la siguiente figura para construir nuestros procesos.
 ![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
@@ -88,17 +90,382 @@ En el momento en el que un Batch se ejecuta por primera vez, se genera un JobExe
 
 El JobRepository será el elemento que permitirá persistir la información referente a la ejecución del batch en la base de datos.
 
-**[Back to top](#Índice)**
+### JobLauncher
+
+```java
+public interface JobLauncher {
+ public JobExecution run(Job job, JobParameters jobParameters)
+ 			throws JobExecutionAlreadyRunningException, JobRestartException;
+}
+```
+
+JobLauncher representa una simple interfaz para lanzar ejecuciones de un Job con un conjunto de JobParameters como entrada.
+
+```java
+try {
+	JobExecution execution = jobLauncher.run(job, new JobParameters());
+	System.out.println("Exit Status : " + execution.getStatus());
+} catch (Exception e) {
+	e.printStackTrace();
+}
+```
+
+### Item Readers, Item Writters, Item Processors
+
+* **Item Readers:** Representa la fase de lectura de información para un Step. El ItemReader realizará la lectura elemento a elemento. Una vez concluya la lectua de todos los elementos de la fuente de información configurada retornará null.
+* **Item Writter:** Representa la fase de salida o escritura de información de un Step, batch o chunk. Generalmente un ItemWriter no tiene conocimiento de la información que recibirá a continuación, únicamente del elemento que se encuentra procesando en cada instante. 
+* **Item Processor:** Representa la lógica de negocio implementada para realizar el procesado de la información. Mientras que un ItemReader realiza la lectura de elementos y el ItemWriter se encarga de la persistencia de la información, ItemProcesor provee de elementos de transformación de la información entre la fase de lectura y posterior fase de escritura. En el caso de que un ItemProcesor retorne null indicará que para dicho elemento no es necesario que se realice la fase de escritura.
+ 
+**[Ir al índice](#Índice)**
 
 ## Configuración a nivel de job
 
+### Configurar el job
+
+Un Job aparte de ser un contenedor de Steps, dispone de un gran número de parámetros de configuración. La configuración básica de un job será el siguiente:
+
+```xml
+<job id="nombreJob">
+ <step id="nombreStep" parent="refParent" next="nombreStepSiguiente"/>
+ <step id="nombreStepSiguiente" parent="refParent"/>
+</job>
+```
+
+De forma adicional se podrá especificar el otros parámetros:
+
+```xml
+<job id="nombreJob" job-repository="specialRepository" restartable="false" parent="jobPadre"> 
+    <listeners> 
+        <listener ref="sampleListener"/>
+    </listeners>
+    <validator ref="paremetersValidator"/>
+    ...
+```
+
+* **JobRepository:** Permite especificar el jobRepository al que hace referencia cada Job.
+* **Restartable:** Permite especificar si un job puede reiniciar su ejecución o no.
+* **Listeners/Interceptors:** Permite registrar escuchadores de eventos propios del job (inicio, fin…).
+* **Parent:** Permite especificar un job padre del que hereda sus características de configuración.
+* **Validator:** Permite validar que los parámetros de entrada de un job cumplen ciertas especificaciones.
+
+### Configurar el JobRepository
+
+Como se comentaba anteriormente, el **JobRepository** permitirá el acceso a la base de datos para almacenar la información relativa a la ejecución del batch y dotará de métodos a la infraestructura para gestionar el JobLauncher, el Job y los Steps.
+
+```xml
+<job-repository id="jobRepository" /* Obligatorio - Identificador del objeto que representa el jobRepository */
+ data-source="dataSource" 		/* Datasource con acceso a la base de datos */
+ transaction-manager="transactionManager" 
+ isolation-level-for-create="SERIALIZABLE"  /* Permite almacenar metadatos del batch para su relanzamiento */
+ table-prefix="BATCH_"		/* Define el schema de la base de datos */
+max-varchar-length="1000"/>
+```
+
+A través de la definición del jobRepository podremos especificar que su información no sea persistida en **base de datos y se almacene en memoria**.
+
+```xml
+<bean id="jobRepository"  class="org.springframework.....MapJobRepositoryFactoryBean">
+      <property name="transactionManager" ref="transactionManager"/>
+</bean>
+```
+
+### Configurar el JobLauncher
+
+La implementación más básica es la del SimpleJobLauncher ya que únicamente requiere de la referencia al JobRepository para iniciar una ejecución:
+
+```xml
+<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+    <property name="jobRepository" ref="jobRepository" />
+    <property name="taskExecutor"> <!-- Opcional Asíncrono -->
+        <bean class="org.springframework.core.task.SimpleAsyncTaskExecutor" />
+    </property>
+</bean>
+```
+
+Ejecución Síncrona:
+Se espera por el retorno de la ejecución.
+
+TODO:
+
+Ejecución asíncrona:
+La ejecución del batch es asíncrona.
+
+TODO: 
+
+### Ejecución de un Job
+
+Para poder realizar la **ejecución de un Batch** se necesitan al menos dos cosas, el JobLauncher y el propio batch a ejecutar. Existen varios modos de realizar la ejecución de un batch, entre ellos los más empleados se encuentra la ejecución desde la línea de comandos y la ejecución desde el propio contexto de ejecución del batch a ejecutar.
+
+* Ejecución desde la línea de comandos
+
+Opción empleada para aquellos casos en los que se quiera automatizar la ejecución programada de la ejecución de un batch. 
+
+```java
+java -cp "target/dependency-jars/*:target/your-project.jar" org.springframework.batch.core.launch.support.CommandLineJobRunner spring/batch/jobs/job-read-files.xml readJob param1=value1
+```
+
+* Ejecución desde el contexto de ejecución del batch
+ 
+Opción que permite iniciar la ejecución de un proceso batch mediante una petición **HttpRequest**, para ello se requiere la creación de un Controlador MVC del modo expuesto. 
+
+El batch se ejecutará de manera **asíncrona** sin necesidad de que la petición HTTP espere por el retorno de la ejecución del proceso batch.
+
+```java
+@Controller
+public class JobLauncherController {
+
+    @Autowired
+    JobLauncher jobLauncher;
+
+    @Autowired
+    Job job;
+
+    @RequestMapping("/jobLauncher.html")
+    public void handle() throws Exception{
+        jobLauncher.run(job, new JobParameters());
+    }
+}
+```
+
+**[Ir al índice](#Índice)**
+
 ## Configuración a nivel de step
+
+### Configurar un step
+
+Un **Step** encapsula una fase independiente de funcionalidad y contiene toda la información necesaria para definir y controlar la ejecución del batch. **Todo batch debe tener al menos un step.**
+
+```xml
+<step id="step1">
+    <tasklet ref="myTasklet" />
+</step>
+```
+
+Un step puede estar compuesto de tres elementos: reader, writer y processor:
+
+* **ItemReader:** Elemento responsable de leer datos de una fuente de datos (BBDD, fichero, cola de mensajes, etc…).
+* **ItemProcessor:** Elemento responsable tratar la información obtenida por el reader. No es obligatorio su uso.
+* **ItemWriter:** Elemento responsable guardar la información leída por el reader o tratada por el processor. Si hay un reader debe haber un writer.
+
+TODO: Imagen
+
+### Chunks
+
+Un **Chunk** se corresponde con la tipología de steps más utilizada en los procesos batch. Consisten en la construcción de un componente especializado en la lectura de elementos **(ItemReader)**, un componente encargado de su procesamiento opcional **(ItemProcessor)** y un componente que se encarga de la persistencia **(ItemWriter)**.
+
+TODO: Imagen
+
+Los distintos elementos que constituyen un chunk podrán sobreescribirse para customizarse en función de las necesidades de negocio. El flujo de un chunk se complementará al introducir políticas de reintento y omisión de registros.
+
+### Tasklets 
+
+Un **tasklet** es un objeto que contiene cualquier lógica que será ejecutada como parte de un trabajo. Se construyen mediante la implementación de la interfaz Tasklet y son la forma más simple para ejecutar código. 
+
+La **interfaz Tasklet** contiene únicamente un método execute que será ejecutado repetidamente mientras el retorno del Tasklet sea distinto a RepeatStatus.FINISHED o bien se lance una excepción.
+
+```xml
+<step id="step1">
+    <tasklet ref="myTasklet" />
+</step>
+```
+
+Se puede emplear el TaskletAdapter para customizar el método al que invocar del siguiente modo:
+
+```xml
+<bean id="myTasklet" class="org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter">
+ <property name="targetObject">
+ <bean class="my.class.CustomTaskletAdapterClass"/>
+ </property>
+ <property name="targetMethod" value="myCustomMethod" />
+</bean>
+```
+
+### Flujo de Steps
+
+A través del **control de flujo** de ejecución de Steps es posible definir lógicas de negocio en función del estado de salida de otros Steps.
+
+TODO: Imagen
+
+```xml
+<job id="job">
+    <step id="stepA" next="stepB”/>
+    <step id="stepB" next="stepC”/>
+    <step id="stepC"/>
+</step>
+```
+
+TODO: Imagen
+
+```xml
+<job id="job">
+    <step id="stepA">
+    	<next on="*" to="stepB"> // * -> 0 o más caracteres
+    	<next on="FAILED" to="stepC"> 
+    </step>
+    <step id="stepB"/>
+    <step id="stepC"/>
+</step>
+```
+
+Otros elementos a tener en cuenta en la definición de flujos entre steps:
+
+* **BatchStatus**: Representa el estado de un Job o Step (COMPLETED, STARTED, FAILED,...)
+* **ExitStatus**: Representa el estado de un Step al finalizar su ejecución.
+* Tag **end**: Determina la finalización inmediata del Job tras cumplir su condición. ExitStatus y BatchStatus en estado COMPLETED.
+* Tag **fail**: Determina la finalización inmediata del Job tras cumplir su condición. ExitStatus y BatchStatus en estado FAILED.
+* Tag **stop**: Determina la parada inmediata del Job tras cumplir su condición. BatchStatus en estado STOPPED.
+
+### Scopes (Job/Step)
+
+El Scope permite definir el ámbito en el que se desea crear un bean y en qué momento de la fase de generación de objetos del contenedor de Spring se va a crear permitiendo de este modo definir el orden de generación.
+
+Es necesario incorporar al XML el siguiente namespace:
+
+```xml
+<beans ….  xmlns:batch="http://www.springframework.org/schema/batch"...
+```
+
+* **Step Scope:** Se requiere esta configuración en el caso de que sea necesario que el Step se inicie antes de que se cree la instancia del Bean (carga de propiedades, enlace con base de datos,...)
+
+```xml
+<bean id="step1" scope=”step”>
+……
+</bean>
+```
+
+* **Job Scope:** Sólo permitirá la creación de un determinado bean por job. Permitirá recuperar propiedades del job, jobExecutionContext o jobParameters.
+
+```xml
+<bean id="step1" scope=”job”>
+……
+</bean>
+```
+
+**[Ir al índice](#Índice)**
 
 ## ItemReaders, itemWriters y itemProcesors
 
+### FlatFileItemReaders
+
+Componente genérico de Spring Batch que permite realizar la **obtención de información en un fichero o stream.**
+Este componente genérico permite configurar los siguientes aspectos de su implementación:
+
+```xml
+<bean id="cvsFileItemReader" class="org.springframework....file.FlatFileItemReader">
+    <property name="resource" value="file:csv/inputs/report.csv" />
+    <property name="lineMapper">
+        <bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+        <property name="lineTokenizer">
+            <bean class="org.springframework.batch....transform.DelimitedLineTokenizer">
+                <property name="names" value="id,name" />
+            </bean>
+        </property>
+        <property name="fieldSetMapper">
+            <bean class="com.everis.uco.spring.batch….MyObjectFieldSetMapper" />
+        </property>
+        </bean>
+    </property>
+</bean>
+```
+
+* **Resource:** Recurso de entrada (fichero).
+* **LineMapper:** Permite realizar la lectura de información. Se podrán realizar numerosas configuraciones sobre este elemento para determinar el número de campos a obtener, líneas que ignorar,...
+* **FieldSetMapper:** Componente que permite realizar el mapeo de la información obtenida a objetos generados con una determinada clase.
+
+### FlatFileItemWriters
+
+Componente genérico de Spring Batch que permite realizar la persistencia de información en un fichero o stream. Este componente genérico permite configurar los siguientes aspectos de su implementación:
+
+```xml
+<bean id="itemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
+  <property name="resource" ref="outputResource" />
+  <property name="lineAggregator">
+  <bean class="org.spr...FormatterLineAggregator">
+  <property name="fieldExtractor">
+  <bean class="org.spr...BeanWrapperFieldExtractor">
+  <property name="names" value="name,credit" />
+  </bean>
+  </property>
+  <property name="format" value="%-9s%-2.0f" />
+  </bean>
+  </property>
+</bean>
+```
+
+* **Resource:** Recurso de salida (fichero).
+* **LineAggregator:** Permite agregar varios campos en una única fila (String). Es el opuesto al LineTokenizer. Implementará el método aggregate(T item).
+* **FieldExtractor:** Componente genérico que permite extraer parámetros de un bean. Su utilización junto a BeanWrapperFieldExtractor permitirá especificar a través de la propiedad names el nombre de los atributos del bean que extraer para poder generar la salida.
+ 
+### XML Item Readers y Writers
+
+Spring Batch facilita utilidades para realizar la lectura y escritura de información en XMLs. A continuación se detalla cómo realizarlo a través del StAX API.
+
+* **StaxEventItemReader** 
+
+```xml
+<bean id="itemReader" class="org.springframework.batch.item.xml.StaxEventItemReader">
+    <property name="fragmentRootElementName" value="trade" />
+    <property name="resource" value="data/iosample/input/input.xml" />
+    <property name="unmarshaller" ref="tradeMarshaller" />
+</bean>
+```
+
+**fragmentRootElementName:** Elemento padre del XML (root-element).
+**resource:** Acceso al fichero de entrada que contiene la información en formato XML.
+**unmarshaller:** Facilidad OXM que permite realizar el mapeo de los campos definidos en el XML en los campos de objetos Java para su posterior tratamiento y manejo.
+
+```xml
+<bean id="tradeMarshaller"
+      class="org.springframework.oxm.xstream.XStreamMarshaller">
+    <property name="aliases">
+        <util:map id="aliases">
+            <entry key="trade"  value="org.springframework.batch.sample.domain.Trade" />
+            <entry key="price" value="java.math.BigDecimal" />
+            <entry key="name" value="java.lang.String" />
+        </util:map>
+    </property>
+</bean>
+```
+
+* **StaxEventItemWriter**
+
+```xml
+<bean id="itemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
+    <property name="resource" ref="outputResource" />
+    <property name="marshaller" ref="customerCreditMarshaller" />
+    <property name="rootTagName" value="customers" />
+    <property name="overwriteOutput" value="true" />
+</bean>
+```
+
+**rootTagName:** Elemento padre del XML (root-element).
+**resource:** Acceso al fichero de entrada que contiene la información en formato XML.
+**marshaller:** Facilidad OXM que permite realizar el mapeo de los campos de los objetos Java en los campos del XML.
+**overwriteOutput:** Sobreescribe el fichero de salida en caso de existir.
+
+```xml
+<bean id="customerCreditMarshaller"
+      class="org.springframework.oxm.xstream.XStreamMarshaller">
+    <property name="aliases">
+        <util:map id="aliases">
+            <entry key="custom" value="org.springframework.batch.sample.domain.CustomerCredit" />
+            <entry key="credit" value="java.math.BigDecimal" />
+            <entry key="name" value="java.lang.String" />
+        </util:map>
+    </property>
+</bean>
+```
+
+
+**[Ir al índice](#Índice)**
+
 ## Escalado y paralelización
+
+
+**[Ir al índice](#Índice)**
 
 ## Otros
 
 
+**[Ir al índice](#Índice)**
 
