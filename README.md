@@ -186,7 +186,11 @@ La implementación más básica es la del SimpleJobLauncher ya que únicamente r
 
 Se espera por el retorno de la ejecución.
 
-<p align="center">![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Ejecucion_Sincrona.png)</p>
+<p align="center">
+
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Ejecucion_Sincrona.png)
+
+</p>
 
 * **Ejecución asíncrona:**
 
