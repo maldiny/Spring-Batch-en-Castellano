@@ -23,7 +23,9 @@ Los procesos batch (o procesos por lotes) acostumbran a ser aquellos programas q
 
 ## Elementos de un batch
 Spring Batch nos propone un diseño como el que se puede apreciar en la siguiente figura para construir nuestros procesos.
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+
+<p align="center"><img src="https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png"></p>
+
 * **JobRepository**: componente encargado de la persistencia de metadatos relativos a los procesos tales como procesos en curso o estados de las ejecuciones.
 * **JobLauncher:** componente encargado de lanzar los procesos suministrando los parámetros de entrada deseados.
 * **Job:** El Job es la representación del proceso. Un proceso, a su vez, es un contenedor de pasos (steps).
@@ -192,7 +194,7 @@ Se espera por el retorno de la ejecución.
 
 La ejecución del batch es asíncrona.
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Ejecucion_Asincrona.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Ejecucion_Asincrona.png"></p>
 
 ### Ejecución de un Job
 
@@ -249,13 +251,13 @@ Un step puede estar compuesto de tres elementos: reader, writer y processor:
 * **ItemProcessor:** Elemento responsable tratar la información obtenida por el reader. No es obligatorio su uso.
 * **ItemWriter:** Elemento responsable guardar la información leída por el reader o tratada por el processor. Si hay un reader debe haber un writer.
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Configurar_Un_Step.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Configurar_Un_Step.png"></p>
 
 ### Chunks
 
 Un **Chunk** se corresponde con la tipología de steps más utilizada en los procesos batch. Consisten en la construcción de un componente especializado en la lectura de elementos **(ItemReader)**, un componente encargado de su procesamiento opcional **(ItemProcessor)** y un componente que se encarga de la persistencia **(ItemWriter)**.
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Chunks.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Chunks.png"></p>
 
 Los distintos elementos que constituyen un chunk podrán sobreescribirse para customizarse en función de las necesidades de negocio. El flujo de un chunk se complementará al introducir políticas de reintento y omisión de registros.
 
@@ -286,7 +288,7 @@ Se puede emplear el TaskletAdapter para customizar el método al que invocar del
 
 A través del **control de flujo** de ejecución de Steps es posible definir lógicas de negocio en función del estado de salida de otros Steps.
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Steps_Secuenciales.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Steps_Secuenciales.png"></p>
 
 ```xml
 <job id="job">
@@ -296,7 +298,7 @@ A través del **control de flujo** de ejecución de Steps es posible definir ló
 </step>
 ```
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Steps_Condicionales.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Steps_Condicionales.png"></p>
 
 ```xml
 <job id="job">
@@ -606,7 +608,7 @@ SyncTaskExecutor es la implementación por defecto de TaskExecutor.
 
 La técnica denominada **Remote chunking** consiste en derivar el procesado del step a través de múltiples procesos remotos comunicados entre sí a través de un middleware. El patrón del sistema sería el siguiente:
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Remote_Chunking.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Remote_Chunking.png"></p>
 
 El **máster** sustituye el ItemWriter por una versión que realiza el envío de elementos al middleware, mientras que los **esclavos** sustituyen el ItemReader por listeners al middleware para procesar los elementos.
 
@@ -618,7 +620,7 @@ El **máster** sustituye el ItemWriter por una versión que realiza el envío de
 
 **Spring Batch Admin** como su nombre indica es una Consola Web (Spring MVC) de Administración para aplicaciones y sistemas Spring Batch. 
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_Batch_admin.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_Batch_admin.png"></p>
 
 Esta consola **permite** realizar las siguientes operativas:
 
@@ -628,9 +630,9 @@ Esta consola **permite** realizar las siguientes operativas:
 * Ver el detalle de una ejecución y sus pasos.
 * Detener una ejecución.
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_Batch_admin_Launcher.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_Batch_admin_Launcher.png"></p>
 
-![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_batch_admin_details.png)
+<p align="center"><img src="https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_batch_admin_details.png"></p>
 
 **[Ir al índice](#Índice)**
 
