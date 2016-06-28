@@ -1,4 +1,4 @@
-package com.everis.uco.spring.batch.multiresourceitemreader;
+package com.maldiny.spring.batch.multiresourceitemreader;
 
 import static org.junit.Assert.assertEquals;
 

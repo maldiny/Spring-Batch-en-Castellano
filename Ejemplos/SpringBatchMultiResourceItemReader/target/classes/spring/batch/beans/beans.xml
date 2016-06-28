@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		">
 	
-	<bean id="myDomain" class="com.everis.uco.spring.batch.multiresourceitemreader.MyDomain"/>
+	<bean id="myDomain" class="com.maldiny.spring.batch.multiresourceitemreader.MyDomain"/>
 
 	<bean id="flatFileItemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
 		<property name="lineMapper">
