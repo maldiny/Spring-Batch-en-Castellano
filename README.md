@@ -182,17 +182,17 @@ La implementación más básica es la del SimpleJobLauncher ya que únicamente r
 </bean>
 ```
 
-Ejecución Síncrona:
+* **Ejecución Síncrona:**
+
 Se espera por el retorno de la ejecución.
 
 ![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Ejecucion_Sincrona.png)
-TODO:
 
-Ejecución asíncrona:
+* **Ejecución asíncrona:**
+
 La ejecución del batch es asíncrona.
 
 ![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Ejecucion_Asincrona.png)
-TODO: 
 
 ### Ejecución de un Job
 
