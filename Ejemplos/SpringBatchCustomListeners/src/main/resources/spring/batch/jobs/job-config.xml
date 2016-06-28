@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch 
+		http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		">
+
+	<import resource="../config/database-context.xml" />
+	<import resource="../beans/beans.xml" />
+
+	<!-- Skip-limit to 10 exceptions before fail the execution of the batch but in this case is defined on the skip-policy bean. Inform the skippable-exception-classes with the skippable exceptions -->
+	<!-- Skip-policy references de bean that manages the exceptions during the execution to determine if the batch fails or not -->
+	<job id="taskletJob" xmlns="http://www.springframework.org/schema/batch">
+		<step id="step1">
+			<tasklet>
+				<chunk reader="customReader" processor="customProcesor" writer="customWriter" commit-interval="1" skip-policy="customSkipPolicy"/>
+				<batch:listeners>
+					<batch:listener ref="customStepExecutionListener"/>
+					<batch:listener ref="customItemReadListener"/>
+					<batch:listener ref="customItemProcessListener"/>
+					<batch:listener ref="customItemWriteListener"/>
+					<batch:listener ref="customChunkListener"/>
+					<batch:listener ref="customSkipListener"/>
+				</batch:listeners>
+			</tasklet>
+		</step>
+	</job>
+
+</beans>

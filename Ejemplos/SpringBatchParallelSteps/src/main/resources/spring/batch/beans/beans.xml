@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch 
+		http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		">
+
+	<bean id="customNumberTasklet" class="com.maldiny.spring.batch.parallel.steps.CustomNumberTasklet"/>
+	<bean id="customLetterTasklet" class="com.maldiny.spring.batch.parallel.steps.CustomLetterTasklet"/>
+	
+	<!-- Thread executor for parallel processing -->
+	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor"/>
+	
+</beans>

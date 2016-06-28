@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch 
+		http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		http://www.springframework.org/schema/util 
+		http://www.springframework.org/schema/util/spring-util-3.2.xsd
+		">
+
+	<bean id="customConverter" class="com.maldiny.spring.batch.springbatchxmlreaderwriter.CustomConverter" />
+	
+	<bean id="xmlItemWriterUnmarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+	    <property name="aliases">
+	        <util:map id="aliases">
+	            <entry key="object" value="com.maldiny.spring.batch.springbatchxmlreaderwriter.MyObject" />
+	        </util:map>
+	    </property>
+	</bean>
+	
+	<bean id="xmlItemReaderUnmarshaller" class="org.springframework.oxm.xstream.XStreamMarshaller">
+	    <property name="aliases">
+	        <util:map id="aliases">
+	            <entry key="object" value="com.maldiny.spring.batch.springbatchxmlreaderwriter.MyObject" />
+	        </util:map>
+	    </property>
+	    <property name="converters">
+	        <array>
+	            <ref bean="customConverter" />
+	        </array>
+	    </property>
+	</bean>
+	
+	<bean id="xmlItemReader" class="org.springframework.batch.item.xml.StaxEventItemReader">
+	    <property name="fragmentRootElementName" value="object" />
+	    <property name="resource" value="file:xml/input/input.xml" />
+	    <property name="unmarshaller" ref="xmlItemReaderUnmarshaller" />
+	</bean>
+	<bean id="xmlItemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
+	    <property name="resource" value="file:xml/output/output.xml" />
+	    <property name="marshaller" ref="xmlItemWriterUnmarshaller" />
+	    <property name="rootTagName" value="items" />
+	</bean>
+	
+</beans>

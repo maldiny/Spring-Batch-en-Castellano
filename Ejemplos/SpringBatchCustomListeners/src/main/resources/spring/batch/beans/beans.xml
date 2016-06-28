@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch 
+		http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		">
+
+	<bean id="customReader" class="com.maldiny.spring.batch.custom.CustomReader"/>
+	<bean id="customWriter" class="com.maldiny.spring.batch.custom.CustomWriter"/>
+	<bean id="customProcesor" class="com.maldiny.spring.batch.custom.CustomProcesor"/>
+	
+	<!-- Custom Listeners Beans -->
+	<bean id="customStepExecutionListener" class="com.maldiny.spring.batch.custom.listener.CustomStepExecutionListener"/>
+	<bean id="customItemReadListener" class="com.maldiny.spring.batch.custom.listener.CustomItemReadListener"/>
+	<bean id="customItemProcessListener" class="com.maldiny.spring.batch.custom.listener.CustomItemProcessListener"/>
+	<bean id="customItemWriteListener" class="com.maldiny.spring.batch.custom.listener.CustomItemWriteListener"/>
+	<bean id="customChunkListener" class="com.maldiny.spring.batch.custom.listener.CustomChunkListener"/>
+	<bean id="customSkipListener" class="com.maldiny.spring.batch.custom.listener.CustomSkipListener"/>
+	
+	<bean id="customSkipPolicy" class="com.maldiny.spring.batch.custom.listener.CustomSkipPolicy">
+        <property name="skipLimit" value="10" /> <!-- The skip-limit="10" attribute is not used -->
+    </bean>
+	
+</beans>

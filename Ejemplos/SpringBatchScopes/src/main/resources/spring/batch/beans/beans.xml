@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:batch="http://www.springframework.org/schema/batch" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch 
+		http://www.springframework.org/schema/batch/spring-batch-2.2.xsd
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+		">
+
+	<!-- This scope is not available by default, but will be if you are using 
+		the batch XML namespace. If you are not, adding the following to your Spring 
+		configuration will make the scope available, per the Spring Batch documentation -->
+	<bean class="org.springframework.batch.core.scope.StepScope" />
+
+	<!-- If scope="step" attribute is removed, jobParameters object will not be found -->
+	<bean id="customTasklet" class="com.maldiny.spring.batch.scopes.CustomTasklet" scope="step">
+		<property name="jobParameterExample" value="#{jobParameters['customStepScopeParameter']}" />
+	</bean>
+
+</beans>
