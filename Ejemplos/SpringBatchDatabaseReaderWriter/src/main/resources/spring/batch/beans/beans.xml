@@ -11,9 +11,8 @@
 		http://www.springframework.org/schema/util 
 		http://www.springframework.org/schema/util/spring-util-3.2.xsd
 		">
-
-	<bean id="customWriter" class="com.everis.uco.spring.batch.springbatchdatabasereaderwriter.CustomWriter" />
-	<bean id="customProcesor" class="com.everis.uco.spring.batch.springbatchdatabasereaderwriter.CustomProcesor" />
+	<bean id="customWriter" class="com.maldiny.spring.batch.springbatchdatabasereaderwriter.CustomWriter" />
+	<bean id="customProcesor" class="com.maldiny.spring.batch.springbatchdatabasereaderwriter.CustomProcesor" />
 	
 	<bean id="itemReader" class="org.springframework.batch.item.database.JpaPagingItemReader">
 		<property name="entityManagerFactory" ref="entityManagerFactory" />
@@ -53,7 +52,7 @@
     </bean> -->
     <!-- <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
       <property name="dataSource" ref="dataSource" />
-      <property name="packagesToScan" value="com.everis.uco.spring.batch.springbatchdatabasereaderwriter" />
+      <property name="packagesToScan" value="com.maldiny.spring.batch.springbatchdatabasereaderwriter" />
       <property name="persistenceUnitName" value="persistenceUnit" />
       <property name="jpaVendorAdapter">
          <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter" />

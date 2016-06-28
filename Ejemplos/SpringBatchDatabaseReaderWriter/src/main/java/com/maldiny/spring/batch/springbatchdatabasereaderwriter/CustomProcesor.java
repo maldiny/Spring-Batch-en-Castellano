@@ -1,4 +1,4 @@
-package com.everis.uco.spring.batch.springbatchdatabasereaderwriter;
+package com.maldiny.spring.batch.springbatchdatabasereaderwriter;
 
 import org.springframework.batch.item.ItemProcessor;
 
