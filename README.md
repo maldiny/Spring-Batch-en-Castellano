@@ -185,13 +185,13 @@ La implementación más básica es la del SimpleJobLauncher ya que únicamente r
 Ejecución Síncrona:
 Se espera por el retorno de la ejecución.
 
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Ejecucion_Sincrona.png)
 TODO:
 
 Ejecución asíncrona:
 La ejecución del batch es asíncrona.
 
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Ejecucion_Asincrona.png)
 TODO: 
 
 ### Ejecución de un Job
@@ -249,14 +249,12 @@ Un step puede estar compuesto de tres elementos: reader, writer y processor:
 * **ItemProcessor:** Elemento responsable tratar la información obtenida por el reader. No es obligatorio su uso.
 * **ItemWriter:** Elemento responsable guardar la información leída por el reader o tratada por el processor. Si hay un reader debe haber un writer.
 
-TODO: Imagen
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Configurar_Un_Step.png)
 
 ### Chunks
 
 Un **Chunk** se corresponde con la tipología de steps más utilizada en los procesos batch. Consisten en la construcción de un componente especializado en la lectura de elementos **(ItemReader)**, un componente encargado de su procesamiento opcional **(ItemProcessor)** y un componente que se encarga de la persistencia **(ItemWriter)**.
 
-TODO: Imagen
 ![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Chunks.png)
 
 Los distintos elementos que constituyen un chunk podrán sobreescribirse para customizarse en función de las necesidades de negocio. El flujo de un chunk se complementará al introducir políticas de reintento y omisión de registros.
@@ -288,8 +286,7 @@ Se puede emplear el TaskletAdapter para customizar el método al que invocar del
 
 A través del **control de flujo** de ejecución de Steps es posible definir lógicas de negocio en función del estado de salida de otros Steps.
 
-TODO: Imagen
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Steps_Secuenciales.png)
 
 ```xml
 <job id="job">
@@ -299,8 +296,7 @@ TODO: Imagen
 </step>
 ```
 
-TODO: Imagen
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Steps_Condicionales.png)
 
 ```xml
 <job id="job">
@@ -610,8 +606,7 @@ SyncTaskExecutor es la implementación por defecto de TaskExecutor.
 
 La técnica denominada **Remote chunking** consiste en derivar el procesado del step a través de múltiples procesos remotos comunicados entre sí a través de un middleware. El patrón del sistema sería el siguiente:
 
-TODO: Imagen
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Remote_Chunking.png)
 
 El **máster** sustituye el ItemWriter por una versión que realiza el envío de elementos al middleware, mientras que los **esclavos** sustituyen el ItemReader por listeners al middleware para procesar los elementos.
 
@@ -623,8 +618,7 @@ El **máster** sustituye el ItemWriter por una versión que realiza el envío de
 
 **Spring Batch Admin** como su nombre indica es una Consola Web (Spring MVC) de Administración para aplicaciones y sistemas Spring Batch. 
 
-TODO: Imagen
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_Batch_admin.png)
 
 Esta consola **permite** realizar las siguientes operativas:
 
@@ -634,8 +628,9 @@ Esta consola **permite** realizar las siguientes operativas:
 * Ver el detalle de una ejecución y sus pasos.
 * Detener una ejecución.
 
-TODO: Imagen
-![alt tag](https://github.com/maldiny/Spring-Batch-en-Castellano/blob/737de763d536164092e0e8aeb19558a89a47f5ea/Imagenes/%5BMaldiny%5D_Elementos_de_un_batch.png)
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_Batch_admin_Launcher.png)
+
+![alt tag](https://raw.githubusercontent.com/maldiny/Spring-Batch-en-Castellano/master/Imagenes/%5BMaldiny%5D_Spring_batch_admin_details.png)
 
 **[Ir al índice](#Índice)**
 
