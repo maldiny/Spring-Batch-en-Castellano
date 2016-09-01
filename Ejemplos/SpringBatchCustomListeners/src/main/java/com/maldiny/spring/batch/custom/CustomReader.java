@@ -5,7 +5,7 @@ import org.springframework.batch.item.NonTransientResourceException;
 import org.springframework.batch.item.ParseException;
 import org.springframework.batch.item.UnexpectedInputException;
 
-import com.maldiny.spring.batch.custom.listener.CustomSkipableException;
+import com.maldiny.spring.batch.custom.listeners.CustomSkipableException;
 
 public class CustomReader implements ItemReader<MyObject> {
 	

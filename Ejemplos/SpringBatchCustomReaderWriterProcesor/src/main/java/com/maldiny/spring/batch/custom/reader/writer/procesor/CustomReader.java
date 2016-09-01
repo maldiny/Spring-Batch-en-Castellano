@@ -1,4 +1,4 @@
-package com.everis.uco.spring.batch.custom;
+package com.maldiny.spring.batch.custom.reader.writer.procesor;
 
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.NonTransientResourceException;

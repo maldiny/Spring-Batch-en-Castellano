@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.batch.item.ItemWriter;
 
-import com.maldiny.spring.batch.custom.listener.CustomSkipableException;
+import com.maldiny.spring.batch.custom.listeners.CustomSkipableException;
 
 public class CustomWriter implements ItemWriter<MyObject> {
 

@@ -9,7 +9,6 @@ public class CustomTasklet implements Tasklet {
 
 	@Override
 	public RepeatStatus execute(StepContribution arg0, ChunkContext arg1) throws Exception {
-		// TODO: Custom business task
 		
 		System.out.println("Executing job");
 		

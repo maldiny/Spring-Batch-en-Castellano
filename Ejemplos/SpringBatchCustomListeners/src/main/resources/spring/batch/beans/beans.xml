@@ -12,14 +12,14 @@
 	<bean id="customProcesor" class="com.maldiny.spring.batch.custom.CustomProcesor"/>
 	
 	<!-- Custom Listeners Beans -->
-	<bean id="customStepExecutionListener" class="com.maldiny.spring.batch.custom.listener.CustomStepExecutionListener"/>
-	<bean id="customItemReadListener" class="com.maldiny.spring.batch.custom.listener.CustomItemReadListener"/>
-	<bean id="customItemProcessListener" class="com.maldiny.spring.batch.custom.listener.CustomItemProcessListener"/>
-	<bean id="customItemWriteListener" class="com.maldiny.spring.batch.custom.listener.CustomItemWriteListener"/>
-	<bean id="customChunkListener" class="com.maldiny.spring.batch.custom.listener.CustomChunkListener"/>
-	<bean id="customSkipListener" class="com.maldiny.spring.batch.custom.listener.CustomSkipListener"/>
+	<bean id="customStepExecutionListener" class="com.maldiny.spring.batch.custom.listeners.CustomStepExecutionListener"/>
+	<bean id="customItemReadListener" class="com.maldiny.spring.batch.custom.listeners.CustomItemReadListener"/>
+	<bean id="customItemProcessListener" class="com.maldiny.spring.batch.custom.listeners.CustomItemProcessListener"/>
+	<bean id="customItemWriteListener" class="com.maldiny.spring.batch.custom.listeners.CustomItemWriteListener"/>
+	<bean id="customChunkListener" class="com.maldiny.spring.batch.custom.listeners.CustomChunkListener"/>
+	<bean id="customSkipListener" class="com.maldiny.spring.batch.custom.listeners.CustomSkipListener"/>
 	
-	<bean id="customSkipPolicy" class="com.maldiny.spring.batch.custom.listener.CustomSkipPolicy">
+	<bean id="customSkipPolicy" class="com.maldiny.spring.batch.custom.listeners.CustomSkipPolicy">
         <property name="skipLimit" value="10" /> <!-- The skip-limit="10" attribute is not used -->
     </bean>
 	

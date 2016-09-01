@@ -2,7 +2,7 @@ package com.maldiny.spring.batch.custom;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import com.maldiny.spring.batch.custom.listener.CustomSkipableException;
+import com.maldiny.spring.batch.custom.listeners.CustomSkipableException;
 
 public class CustomProcesor implements ItemProcessor<MyObject, MyObject> {
 

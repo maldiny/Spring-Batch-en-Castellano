@@ -1,4 +1,4 @@
-package com.maldiny.spring.batch.custom.listener;
+package com.maldiny.spring.batch.custom.listeners;
 
 import org.springframework.batch.core.SkipListener;
 
