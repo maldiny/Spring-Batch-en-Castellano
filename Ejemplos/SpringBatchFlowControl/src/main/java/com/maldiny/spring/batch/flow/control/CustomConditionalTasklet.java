@@ -18,8 +18,8 @@ public class CustomConditionalTasklet implements Tasklet {
 		Long time = Calendar.getInstance().getTimeInMillis();
 		String exit;
 		if(time % 2 == 0){
-			exit = ExitStatus.FAILED.getExitCode().toString();
-			arg0.setExitStatus(ExitStatus.FAILED);
+			exit = ExitStatus.NOOP.getExitCode().toString();
+			arg0.setExitStatus(ExitStatus.NOOP);
 		}else{
 			exit = ExitStatus.COMPLETED.getExitCode().toString();
 			arg0.setExitStatus(ExitStatus.COMPLETED);

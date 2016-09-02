@@ -9,8 +9,8 @@
 		http://www.springframework.org/schema/util/spring-util-3.2.xsd
 		">
 
-	<bean id="customReader" class="com.maldiny.spring.batch.chunk.CustomReader" />
-	<bean id="customWriter" class="com.maldiny.spring.batch.chunk.CustomWriter" />
+	<bean id="customReader" class="com.maldiny.spring.batch.springbatchmultithreadstep.CustomReader" />
+	<bean id="customWriter" class="com.maldiny.spring.batch.springbatchmultithreadstep.CustomWriter" />
 	
 	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
     	<property name="concurrencyLimit" value="1"/>

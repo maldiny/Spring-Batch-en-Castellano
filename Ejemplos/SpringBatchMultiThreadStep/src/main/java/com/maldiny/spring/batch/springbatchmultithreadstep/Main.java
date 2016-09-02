@@ -1,4 +1,4 @@
-package com.maldiny.spring.batch.chunk;
+package com.maldiny.spring.batch.springbatchmultithreadstep;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;

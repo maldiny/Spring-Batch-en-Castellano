@@ -1,4 +1,4 @@
-package com.maldiny.spring.batch.chunk;
+package com.maldiny.spring.batch.springbatchmultithreadstep;
 
 import java.util.concurrent.atomic.AtomicInteger;
 

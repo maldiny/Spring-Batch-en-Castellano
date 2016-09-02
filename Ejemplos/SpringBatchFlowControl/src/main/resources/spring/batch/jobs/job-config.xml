@@ -25,7 +25,7 @@
 		<step id="stepAConditional">
         	<tasklet ref="stepAConditionalBean"/>
         	<next on="COMPLETED" to="stepBConditional" />
-        	<next on="FAILED" to="stepCConditional" />
+        	<next on="NOOP" to="stepCConditional" />
         </step>
         <step id="stepBConditional">
         	<tasklet ref="stepBConditionalBean"/>

@@ -31,7 +31,8 @@
 	
 	<bean id="flatFileItemWriter" class="org.springframework.batch.item.file.FlatFileItemWriter">
 		<property name="resource" value="file:csv/outputs/domain.all.csv" />
-		<property name="appendAllowed" value="false" />
+		<property name="shouldDeleteIfExists" value="true"/>
+		<property name="appendAllowed" value="true" />
 		<property name="lineAggregator">
 			<bean
 				class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
