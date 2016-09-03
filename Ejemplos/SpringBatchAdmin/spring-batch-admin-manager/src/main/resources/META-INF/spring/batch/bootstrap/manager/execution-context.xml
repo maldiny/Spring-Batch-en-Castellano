@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- Workaround for INT-1831 -->
+	<bean id="dummy" class="java.util.Date" />
+
+	<context:annotation-config />
+
+	<bean class="org.springframework.batch.core.scope.StepScope">
+		<property name="proxyTargetClass" value="true"/>
+	</bean>
+
+	<bean class="org.springframework.batch.core.scope.JobScope">
+		<property name="proxyTargetClass" value="true"/>
+	</bean>
+
+	<bean id="jobLauncher" class="org.springframework.batch.core.launch.support.SimpleJobLauncher">
+		<property name="jobRepository" ref="jobRepository" />
+		<property name="taskExecutor" ref="jobLauncherTaskExecutor" />
+	</bean>
+
+	<task:executor id="jobLauncherTaskExecutor" pool-size="6" rejection-policy="ABORT" />
+
+	<task:executor id="poolTaskExecutor" pool-size="600" rejection-policy="CALLER_RUNS" />
+
+	<bean id="throttledTaskExecutor" class="org.springframework.batch.admin.util.ThrottledTaskExecutor">
+		<property name="taskExecutor" ref="poolTaskExecutor" />
+	</bean>
+
+	<bean id="jobRepository" class="org.springframework.batch.core.repository.support.JobRepositoryFactoryBean"
+		p:dataSource-ref="dataSource" p:transactionManager-ref="transactionManager" />
+
+	<bean id="jobExplorer" class="org.springframework.batch.core.explore.support.JobExplorerFactoryBean"
+		p:dataSource-ref="dataSource" />
+
+	<bean id="applicationContextFactories" class="org.springframework.batch.admin.configuration.CompositeApplicationContextFactory">
+		<property name="factoryBeans">
+			<list>
+				<ref bean="&amp;xmlJobContextFactories"/>
+			</list>
+		</property>
+		<property name="factories">
+			<list>
+				<ref bean="javaJobContextFactories"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="xmlJobContextFactories" class="org.springframework.batch.core.configuration.support.ClasspathXmlApplicationContextsFactoryBean">
+		<property name="resources" value="classpath*:/META-INF/spring/batch/jobs/*.xml" />
+	</bean>
+
+	<bean id="javaJobContextFactories" class="org.springframework.batch.core.configuration.support.GenericApplicationContextFactory">
+		<constructor-arg value="${batch.job.configuration.package:org.springframework.batch.admin.sample.job}"/>
+	</bean>
+
+	<bean id="jobLoader" class="org.springframework.batch.core.configuration.support.AutomaticJobRegistrar">
+		<property name="applicationContextFactories" ref="applicationContextFactories"/>
+		<property name="jobLoader">
+			<bean class="org.springframework.batch.core.configuration.support.DefaultJobLoader">
+				<property name="jobRegistry" ref="jobRegistry" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="jobRegistry" class="org.springframework.batch.core.configuration.support.MapJobRegistry" />
+
+	<bean id="jobService" class="org.springframework.batch.admin.service.SimpleJobServiceFactoryBean">
+		<property name="jobRepository" ref="jobRepository" />
+		<property name="jobLauncher" ref="jobLauncher" />
+		<property name="jobLocator" ref="jobRegistry" />
+		<property name="dataSource" ref="dataSource" />
+		<property name="jobExplorer" ref="jobExplorer"/>
+		<property name="transactionManager" ref="transactionManager"/>
+	</bean>
+
+	<bean id="jobBuilderFactory" class="org.springframework.batch.core.configuration.annotation.JobBuilderFactory">
+		<constructor-arg ref="jobRepository"/>
+	</bean>
+
+	<bean id="stepBuilderFactory" class="org.springframework.batch.core.configuration.annotation.StepBuilderFactory">
+		<constructor-arg index="0" ref="jobRepository"/>
+		<constructor-arg index="1" ref="transactionManager"/>
+	</bean>
+
+	<task:scheduled-tasks>
+		<task:scheduled ref="jobService" method="removeInactiveExecutions" fixed-delay="${batch.job.service.reaper.interval}"/>
+	</task:scheduled-tasks>
+
+</beans>

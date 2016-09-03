@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.springframework.batch</groupId>
+	<artifactId>spring-batch-admin</artifactId>
+	<name>Spring Batch Admin</name>
+	<description>A set of services (Java, JSON) and a UI (webapp) for managing and launching Spring Batch jobs.</description>
+	<version>2.0.0.BUILD-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<scm>
+		<url>http://github.com/spring-projects/spring-batch-admin</url>
+		<connection>scm:git:git://github.com/spring-projects/spring-batch-admin.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/spring-projects/spring-batch-admin.git</developerConnection>
+	  <tag>HEAD</tag>
+  </scm>
+	<issueManagement>
+		<system>JIRA</system>
+		<url>https://jira.spring.io/browse/BATCHADM/</url>
+	</issueManagement>
+	<ciManagement>
+		<system>Bamboo</system>
+		<url>https://build.spring.io/browse/BATCH</url>
+	</ciManagement>
+	<licenses>
+		<license>
+			<name>Apache 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- dist.* properties are used by the antrun tasks below -->
+		<dist.id>spring-batch-admin</dist.id>
+		<dist.name>Spring Batch Admin</dist.name>
+		<dist.key>BATCHADM</dist.key>
+		<dist.version>${project.version}</dist.version>
+		<dist.finalName>${dist.id}-${dist.version}</dist.finalName>
+		<dist.fileName>${dist.finalName}.zip</dist.fileName>
+		<dist.filePath>target/${dist.fileName}</dist.filePath>
+		<dist.bucketName>dist.springframework.org</dist.bucketName>
+		<!-- these properties should be in ~/.m2/settings.xml
+		<dist.accessKey>s3 access key</dist.accessKey>
+		<dist.secretKey>s3 secret key</dist.secretKey>
+		-->
+	</properties>
+	<modules>
+		<module>spring-batch-admin-parent</module>
+		<module>spring-batch-admin-resources</module>
+		<module>spring-batch-admin-manager</module>
+		<module>spring-batch-admin-domain</module>
+		<module>spring-batch-admin-sample</module>
+	</modules>
+	<profiles>
+		<profile>
+			<id>verify</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-antrun-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>extract</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+								<configuration>
+									<tasks>
+										<unzip dest="target/it">
+											<fileset dir="target">
+												<include name="*.zip" />
+											</fileset>
+											<regexpmapper from="^[^/]*/(.*)$$" to="\1" handledirsep="true" />
+										</unzip>
+										<fail message="Failed integration test of zip distro: dist/* jar file count wrong.">
+											<condition>
+												<not>
+													<resourcecount count="5">
+														<fileset id="fs" dir="target/it/dist" includes="spring-batch-*.jar" />
+													</resourcecount>
+												</not>
+											</condition>
+										</fail>
+									</tasks>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<!-- After the file count, we build the sample -->
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-invoker-plugin</artifactId>
+						<configuration>
+							<projectsDirectory>target/it</projectsDirectory>
+							<localRepositoryPath>target/local-repo</localRepositoryPath>
+							<debug>true</debug>
+							<settingsFile>${basedir}/src/it/settings.xml</settingsFile>
+							<goals>
+								<goal>test</goal>
+							</goals>
+							<pomIncludes>
+								<pomInclude>sample/*/pom.xml</pomInclude>
+							</pomIncludes>
+						</configuration>
+						<executions>
+							<execution>
+								<id>integration-test</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>run</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>milestone</id>
+			<distributionManagement>
+				<repository>
+					<id>spring-milestone</id>
+					<name>Spring Milestone Repository</name>
+					<url>s3://maven.springframework.org/milestone</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>central</id>
+			<distributionManagement>
+				<repository>
+					<id>spring-sourceforge</id>
+					<name>Spring Sourceforge Repository</name>
+					<url>file:///${user.home}/dev/sourceforge</url>
+				</repository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>staging</id>
+			<properties>
+			  <dist.staging>/${java.io.tmpdir}/spring-batch-admin/dist</dist.staging>
+			</properties>
+			<distributionManagement>
+				<site>
+					<id>staging</id>
+					<url>file:///${user.dir}/target/staging</url>
+				</site>
+				<repository>
+					<id>staging</id>
+					<url>file:///${user.dir}/target/staging</url>
+				</repository>
+				<snapshotRepository>
+					<id>staging</id>
+					<url>file:///${user.dir}/target/staging</url>
+				</snapshotRepository>
+			</distributionManagement>
+		</profile>
+		<profile>
+			<id>upload</id>
+			<build>
+			  <plugins>
+				<plugin>
+				  <artifactId>maven-javadoc-plugin</artifactId>
+				  <executions>
+					<execution>
+						<id>aggregate</id>
+						<goals>
+							<goal>aggregate</goal>
+						</goals>
+					  <phase>package</phase>
+					</execution>
+				  </executions>
+				</plugin>
+				<plugin><!--
+						   run `mvn package assembly:assembly` to trigger assembly creation.
+						   see http://www.sonatype.com/books/mvnref-book/reference/assemblies-set-dist-assemblies.html -->
+				  <artifactId>maven-assembly-plugin</artifactId>
+				  <inherited>false</inherited>
+				  <executions>
+					<execution>
+					  <id>distribution</id>
+					  <goals>
+						<goal>single</goal>
+					  </goals>
+					  <phase>package</phase>
+					</execution>
+				  </executions>
+				</plugin>
+				<plugin>
+				  <groupId>org.apache.maven.plugins</groupId>
+				  <artifactId>maven-antrun-plugin</artifactId>
+				  <version>1.4</version>
+				  <executions>
+					<execution>
+					  <id>upload-dist</id>
+					  <phase>deploy</phase>
+					  <goals>
+						<goal>run</goal>
+					  </goals>
+					  <configuration>
+					    <tasks>
+					      <ant antfile="${basedir}/src/ant/upload-dist.xml">
+						<target name="upload-dist" />
+					      </ant>
+					    </tasks>
+					  </configuration>
+					</execution>
+				  </executions>
+				  <dependencies>
+					<dependency>
+					  <groupId>org.springframework.build</groupId>
+					  <artifactId>org.springframework.build.aws.ant</artifactId>
+					  <version>3.0.5.RELEASE</version>
+					</dependency>
+					<dependency>
+					  <groupId>net.java.dev.jets3t</groupId>
+					  <artifactId>jets3t</artifactId>
+					  <version>0.7.2</version>
+					</dependency>
+				  </dependencies>
+				</plugin>
+			  </plugins>
+			</build>
+		</profile>
+	</profiles>
+	<build>
+		<extensions>
+			<extension>
+				<groupId>org.springframework.build.aws</groupId>
+				<artifactId>org.springframework.build.aws.maven</artifactId>
+				<version>3.0.0.RELEASE</version>
+			</extension>
+		</extensions>
+		<pluginManagement>
+			<plugins>
+                <plugin>
+                  <groupId>org.apache.maven.plugins</groupId>
+                  <artifactId>maven-release-plugin</artifactId>
+                  <version>2.5</version>
+                </plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-antrun-plugin</artifactId>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.ant</groupId>
+							<artifactId>ant</artifactId>
+							<version>1.7.0</version>
+						</dependency>
+						<dependency>
+							<groupId>org.apache.ant</groupId>
+							<artifactId>ant-apache-regexp</artifactId>
+							<version>1.7.0</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<configuration>
+						<junitArtifactName>junit:junit</junitArtifactName>
+					</configuration>
+				</plugin>
+				<plugin>
+				  <artifactId>maven-assembly-plugin</artifactId>
+				  <inherited>false</inherited>
+				  <configuration>
+				    <descriptors>
+				      <descriptor>src/assembly/dist.xml</descriptor>
+				    </descriptors>
+				    <appendAssemblyId>false</appendAssemblyId>
+				  </configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.doxia</groupId>
+				<artifactId>doxia-maven-plugin</artifactId>
+				<version>1.2</version>
+				<executions>
+					<execution>
+						<phase>site</phase>
+						<goals>
+							<goal>render-books</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<books>
+						<book>
+							<directory>src/books</directory>
+							<descriptor>src/books/reference.xml</descriptor>
+							<formats>
+								<format>
+									<id>pdf</id>
+								</format>
+								<format>
+									<id>xhtml</id>
+								</format>
+								<format>
+									<id>xdoc</id>
+								</format>
+							</formats>
+						</book>
+					</books>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-utils</artifactId>
+						<version>1.5.5</version>
+					</dependency>
+					<dependency>
+						<groupId>org.codehaus.plexus</groupId>
+						<artifactId>plexus-container-default</artifactId>
+						<version>1.5.5</version>
+					</dependency>
+					<dependency>
+						<groupId>org.apache.maven.doxia</groupId>
+						<artifactId>doxia-decoration-model</artifactId>
+						<version>1.2</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>site</id>
+						<phase>pre-site</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>Copying image files...</echo>
+								<copy todir="${basedir}/target/generated-site/pdf/reference">
+									<fileset dir="${basedir}/src/books/reference/resources">
+										<include name="**/*.png" />
+										<include name="**/*.gif" />
+										<include name="**/*.jpg" />
+									</fileset>
+								</copy>
+								<copy todir="${basedir}/target/site/reference">
+									<fileset dir="${basedir}/src/books/reference/resources">
+										<include name="**/*.png" />
+										<include name="**/*.gif" />
+										<include name="**/*.jpg" />
+									</fileset>
+								</copy>
+							</tasks>
+						</configuration>
+					</execution>
+					<execution>
+						<id>post-site</id>
+						<!-- N.B. you have to ask for "mvn post-site" to get this -->
+						<phase>post-site</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<tasks>
+								<echo>Copying generated files...</echo>
+								<copy todir="${basedir}/target/site">
+									<fileset dir="${basedir}/target/generated-site/xhtml">
+										<include name="**/*.xhtml" />
+									</fileset>
+									<fileset dir="${basedir}/target/generated-site/pdf">
+										<include name="**/*.pdf" />
+									</fileset>
+								</copy>
+							</tasks>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<reporting>
+		<excludeDefaults>true</excludeDefaults>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-project-info-reports-plugin</artifactId>
+				<version>2.1.1</version>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>jdepend-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<reportSets>
+					<reportSet>
+						<id>html</id>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
+				<configuration>
+					<aggregate>true</aggregate>
+					<breakiterator>true</breakiterator>
+					<links>
+						<link>http://java.sun.com/j2ee/1.4/docs/api</link>
+						<link>http://java.sun.com/j2se/1.5.0/docs/api</link>
+						<link>http://jakarta.apache.org/commons/collections/apidocs-COLLECTIONS_3_0/</link>
+						<link>http://jakarta.apache.org/commons/dbcp/apidocs/</link>
+						<link>http://jakarta.apache.org/commons/fileupload/apidocs/</link>
+						<link>http://jakarta.apache.org/commons/httpclient/apidocs/</link>
+						<link>http://jakarta.apache.org/commons/pool/apidocs/</link>
+						<link>http://jakarta.apache.org/commons/logging/apidocs/</link>
+						<link>http://junit.sourceforge.net/javadoc/</link>
+						<link>http://logging.apache.org/log4j/docs/api/</link>
+						<link>http://jakarta.apache.org/regexp/apidocs/</link>
+						<link>http://jakarta.apache.org/velocity/api/</link>
+						<link>http://static.springsource.org/spring/docs/3.0.x/javadoc-api/</link>
+						<link>http://static.springframework.org/spring-batch/apidocs/</link>
+						<link>http://static.springframework.org/spring-ws/site/apidocs/</link>
+					</links>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jxr-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
+	<distributionManagement>
+		<site>
+			<id>static.springframework.org</id>
+			<url>scp://static.springframework.org/var/www/domains/springframework.org/static/htdocs/spring-batch-admin/trunk</url>
+		</site>
+		<repository>
+			<id>spring-release</id>
+			<name>Spring Release Repository</name>
+			<url>s3://maven.springframework.org/release</url>
+		</repository>
+		<snapshotRepository>
+			<id>spring-snapshot</id>
+			<name>Spring Snapshot Repository</name>
+			<url>https://repo.spring.io/libs-snapshot-local</url>
+		</snapshotRepository>
+	</distributionManagement>
+</project>
