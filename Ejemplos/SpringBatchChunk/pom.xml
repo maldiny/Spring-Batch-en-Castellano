@@ -79,7 +79,7 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>${groupId}.${artifactId}.${version}</finalName>
+		<finalName>${project.groupId}.${project.artifactId}.${project.version}</finalName>
 		<directory>target</directory>
 		<resources>
 			<resource>
@@ -138,7 +138,7 @@
 								<transformer
 									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
 									<manifestEntries>
-										<Main-Class>${groupId}.Main</Main-Class>  <!-- main class of your app goes here -->
+										<Main-Class>${project.groupId}.Main</Main-Class>  <!-- main class of your app goes here -->
 										<Class-Path>.</Class-Path>
 									</manifestEntries>
 								</transformer>
