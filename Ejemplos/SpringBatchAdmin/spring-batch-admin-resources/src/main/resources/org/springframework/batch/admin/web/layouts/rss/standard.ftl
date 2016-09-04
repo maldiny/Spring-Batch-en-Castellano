@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
-<rss version="2.0">
-
-<!-- channel goes here -->
-<#include "${body}">
-
-</rss>

@@ -1,0 +1,6 @@
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/java/org/springframework/batch/admin/sample/job/JobConfiguration.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/java/org/springframework/batch/admin/sample/RemoteStep.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/java/org/springframework/batch/admin/sample/StepLocatorStepFactoryBean.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/java/org/springframework/batch/admin/sample/ExampleItemWriter.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/java/org/springframework/batch/admin/sample/ExampleItemReader.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/java/org/springframework/batch/admin/sample/TrivialJobParametersIncrementer.java

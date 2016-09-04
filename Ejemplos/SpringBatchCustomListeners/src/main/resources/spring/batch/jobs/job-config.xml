@@ -7,7 +7,8 @@
 		http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
 		">
 
-	<import resource="../config/database-context.xml" />
+	<!-- <import resource="../config/database-hsqldb-context.xml" /> --> <!-- External HSQLDB Database -->
+	<import resource="../config/database-context.xml" /> <!-- Internal HSQLDB Database -->
 	<import resource="../beans/beans.xml" />
 
 	<!-- Skip-limit to 10 exceptions before fail the execution of the batch but in this case is defined on the skip-policy bean. Inform the skippable-exception-classes with the skippable exceptions -->

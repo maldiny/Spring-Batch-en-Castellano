@@ -6,13 +6,14 @@
 	<packaging>jar</packaging>
 	<version>1.0</version>
 	<name>SpringBatchChunkContextParams</name>
-	<url>http://maven.apache.org</url>
+	<url>https://github.com/maldiny/Spring-Batch-en-Castellano</url>
 
 	<properties>
 		<jdk.version>1.7</jdk.version>
 		<spring.version>3.2.2.RELEASE</spring.version>
-		<spring.batch.version>2.2.0.RELEASE</spring.batch.version>
+		<spring.batch.version>3.0.3.RELEASE</spring.batch.version>
 		<mysql.driver.version>5.1.25</mysql.driver.version>
+		<hsqldb.driver.version>2.3.2</hsqldb.driver.version>
 	</properties>
 
 	<dependencies>
@@ -49,13 +50,12 @@
 			<artifactId>mysql-connector-java</artifactId>
 			<version>${mysql.driver.version}</version>
 		</dependency>
-		
+
 		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
-			<version>2.0.0</version>
-			<scope>test</scope>
+			<version>${hsqldb.driver.version}</version>
 		</dependency>
 
 		<dependency>

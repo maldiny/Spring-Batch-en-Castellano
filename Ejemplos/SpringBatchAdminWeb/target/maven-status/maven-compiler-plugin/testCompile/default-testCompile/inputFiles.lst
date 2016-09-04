@@ -1,0 +1,6 @@
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/test/java/org/springframework/batch/admin/sample/BootstrapTests.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/test/java/org/springframework/batch/admin/sample/JobIntegrationTests.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/test/java/org/springframework/batch/admin/sample/job/JobConfigurationTests.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/test/java/org/springframework/batch/admin/sample/ExampleItemWriterTests.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/test/java/org/springframework/batch/admin/sample/ExampleItemReaderTests.java
+/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/test/java/org/springframework/batch/admin/sample/JobExecutionTests.java
