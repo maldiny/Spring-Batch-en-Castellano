@@ -14,8 +14,16 @@ La estructura del proyecto se compone de la siguiente estructura y scripts útil
 
 <p align="center"><img src="..//..//Imagenes//[Maldiny]_Run_HSQLDB_database.png"></p>
 
-* **Instalación del arquetipo en el repositorio maven:** mvn clean install -f target/generated-sources/archetype/
-* **Creación del nuevo proyecto utilizando el arquetipo:** Crear un nuevo proyecto maven desde el IDE y seleccionar el arquetipo del siguiente modo:
- 
-<p align="center"><img src="..//..//Imagenes//[Maldiny]_Nuevo_Proyecto_Con_Arquetipos_Maven.png"></p>
-<p align="center"><img src="..//..//Imagenes//[Maldiny]_Crear_proyecto_maven.png"></p>
+La **url** de conexión a la base de datos tras iniciar será la siguiente: 
+
+> jdbc:hsqldb:hsql://localhost:9005/store/spring-batch-database
+
+* **SpringBatch-HSQL-Manager.launch:** Launcher que tras iniciar la base de datos HSQL nos permitirá consultarla y editarla.
+
+<p align="center"><img src="..//..//Imagenes//[Maldiny]_HSQL_database_manager.png"></p>
+
+Para la primera ejecución la base de datos se encontrará vacía y será necesario crear el esquema de base de datos. Para ello se facilita en el proyecto el esquema de base de datos en el fichero **schema/schema-hsqldb.sql**.
+
+* **Schema:** Se incluyen los fichero schema-hsqldb.sql con el modelo de base de datos de Spring Batch 3.0.X que permite crear la base de datos inicial y el fichero schema-drop-hsqldb.sql para eliminar la base de datos.
+
+* **Store:** Directorio en el que se generarán los ficheros temporales de la base de datos para almacenar la información de cada ejecución.
