@@ -6,7 +6,7 @@ Esta configuración de Spring Batch Admin Web se basa en la versión Open Source
 
 ## Prerequisitos
 
-Para poder iniciar la ejecución de Spring Batch Admin Web es necesario previamente iniciar el proyecto SpringBatchAdminDatabase, proyecto que iniciará la base de datos HSQLDB en la que se persistirá la información de los procesos batch.
+Para poder iniciar la ejecución de Spring Batch Admin Web es necesario previamente **iniciar el proyecto SpringBatchAdminDatabase**, proyecto que iniciará la base de datos HSQLDB en la que se persistirá la información de los procesos batch.
 
 ## Ejecución
 
