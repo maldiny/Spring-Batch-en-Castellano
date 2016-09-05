@@ -12,4 +12,10 @@ Para poder iniciar la ejecución de Spring Batch Admin Web es necesario previame
 
 Para realizar el despliegue de la aplicación será necesario emplar un servidor de aplicaciones (tomcat, jetty, tcserver, ...).
 
-<p align="center"><img src="..//..//Imagenes//[[Maldiny]_Spring_Batch_Admin_Web.png"></p>
+La url de acceso a la consola es la siguiente:
+
+> http://localhost:8080/SpringBatchAdminWeb/jobs
+
+<p align="center"><img src="..//..//Imagenes//[Maldiny]_Spring_Batch_Admin_Web.png"></p>
+
+
