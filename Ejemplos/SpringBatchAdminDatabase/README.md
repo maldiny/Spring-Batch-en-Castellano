@@ -2,7 +2,7 @@
 
 El conjunto de ejemplos se complementa con una base de datos externa HSQLDB en la que persistir el resultado de las ejecuciones de los procesos batch para posteriormente consultarlas mediante la web de Spring Batch Admin.
 
-## Codigo
+## Estructura, configuración y utilización
 
 La estructura del proyecto se compone de la siguiente estructura y scripts útiles para poder desplegar la base de datos de Spring Batch para la versión 3.0.X:
 
