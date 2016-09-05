@@ -1,15 +1,15 @@
-# Spring Batch Archetype
+# Spring Batch Admin Web
 
-El arquetipo maven facilita la creación de proyectos batch utilizando el framework Spring Batch.
+Spring Batch Admin facilita una web de administración que permite consultar el estado de las ejecuciones de los procesos batch implementados con el framework Spring Batch.
 
-## Utilización
+Esta configuración de Spring Batch Admin Web se basa en la versión Open Source disponible en [Github](https://github.com/spring-projects/spring-batch-admin).
 
-Para poder hacer uso del arquetipo es necesario seguir los siguientes pasos:
+## Prerequisitos
 
-* **Compilado del código fuente del arquetipo:** mvn clean archetype:create-from-project
-* **Instalación del arquetipo en el repositorio maven:** mvn clean install -f target/generated-sources/archetype/
-* **Creación del nuevo proyecto utilizando el arquetipo:** Crear un nuevo proyecto maven desde el IDE y seleccionar el arquetipo del siguiente modo:
- 
-<p align="center"><img src="..//..//Imagenes//[Maldiny]_Nuevo_Proyecto_Con_Arquetipos_Maven.png"></p>
-<p align="center"><img src="..//..//Imagenes//[Maldiny]_Crear_proyecto_maven.png"></p>
+Para poder iniciar la ejecución de Spring Batch Admin Web es necesario previamente iniciar el proyecto SpringBatchAdminDatabase, proyecto que iniciará la base de datos HSQLDB en la que se persistirá la información de los procesos batch.
 
+## Ejecución
+
+Para realizar el despliegue de la aplicación será necesario emplar un servidor de aplicaciones (tomcat, jetty, tcserver, ...).
+
+<p align="center"><img src="..//..//Imagenes//[[Maldiny]_Spring_Batch_Admin_Web.png"></p>
