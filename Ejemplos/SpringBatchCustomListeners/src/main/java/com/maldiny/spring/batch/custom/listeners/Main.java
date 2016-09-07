@@ -17,7 +17,7 @@ public class Main {
 		ApplicationContext context = new ClassPathXmlApplicationContext(springConfig);
 
 		JobLauncher jobLauncher = (JobLauncher) context.getBean("jobLauncher");
-		Job job = (Job) context.getBean("taskletJob");
+		Job job = (Job) context.getBean("customListeners");
 
 		try {
 
