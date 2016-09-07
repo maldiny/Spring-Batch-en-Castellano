@@ -311,4 +311,4 @@ Una vez modificado, lanzamos el proceso batch y accedemos a la url del portal Sp
 
 <p align="center"><img src="..//..//Imagenes//[Maldiny]_Custom_Listeners_ejecucion.png"></p>
 
-Como se puede ver en la imagen adjunta, se ha producido tanto la lectura como la escritura de diez elementos.
+Como se puede ver en la imagen adjunta, se ha producido error en la escritura de varios elementos, sin embargo, al haber configurado la SkipPolicy para que acepte un límite de diez errores de escritura no se ha producido el fallo del batch.
