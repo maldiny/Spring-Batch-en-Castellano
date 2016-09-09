@@ -8,7 +8,7 @@
 		">
 
 	<!-- <import resource="../config/database-hsqldb-context.xml" /> --> <!-- External HSQLDB Database -->
-	<import resource="../config/database-context.xml" /> <!-- Internal HSQLDB Database -->
+	<import resource="../config/database-context.xml" />  <!-- Internal HSQLDB Database -->
 	<import resource="../beans/beans.xml" />
 
 	<job id="secuentialControlFlow" xmlns="http://www.springframework.org/schema/batch">

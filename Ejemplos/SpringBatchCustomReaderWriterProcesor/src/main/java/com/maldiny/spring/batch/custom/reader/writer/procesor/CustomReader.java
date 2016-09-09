@@ -11,7 +11,6 @@ public class CustomReader implements ItemReader<MyObject> {
 
 	@Override
 	public MyObject read() throws Exception, UnexpectedInputException, ParseException, NonTransientResourceException {
-		// TODO: Reader business.
 		
 		final MyObject item = new MyObject("id " + counter, "Name " + counter);
 		

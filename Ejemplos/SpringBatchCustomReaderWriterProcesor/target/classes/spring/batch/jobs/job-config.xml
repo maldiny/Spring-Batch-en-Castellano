@@ -11,7 +11,7 @@
 	<import resource="../config/database-context.xml" /> <!-- Internal HSQLDB Database -->
 	<import resource="../beans/beans.xml" />
 
-	<job id="taskletJob" xmlns="http://www.springframework.org/schema/batch">
+	<job id="customReaderWriterProcesorJob" xmlns="http://www.springframework.org/schema/batch">
 		<step id="step1">
 			<tasklet>
 				<chunk reader="customReader" processor="customProcesor" writer="customWriter" commit-interval="1" />
