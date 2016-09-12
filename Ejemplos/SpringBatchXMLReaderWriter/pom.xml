@@ -10,10 +10,11 @@
 
 	<properties>
 		<jdk.version>1.7</jdk.version>
-		<spring.version>4.3.2.RELEASE</spring.version>
+		<spring.version>3.2.2.RELEASE</spring.version>
 		<spring.jdbc.version>4.1.2.RELEASE</spring.jdbc.version>
 		<spring.batch.version>3.0.3.RELEASE</spring.batch.version>
 		<mysql.driver.version>5.1.25</mysql.driver.version>
+		<hsqldb.driver.version>2.3.2</hsqldb.driver.version>
 	</properties>
 
 	<dependencies>
@@ -61,8 +62,7 @@
 		<dependency>
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
-			<version>2.0.0</version>
-			<scope>test</scope>
+			<version>${hsqldb.driver.version}</version>
 		</dependency>
 
 		<dependency>
@@ -72,7 +72,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-	<build>
+		<build>
 		<finalName>${project.groupId}.${project.artifactId}.${project.version}</finalName>
 		<directory>target</directory>
 		<resources>
@@ -152,10 +152,10 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/csv</outputDirectory>
+							<outputDirectory>${basedir}/target/xml</outputDirectory>
 							<resources>
 								<resource>
-									<directory>csv</directory>
+									<directory>xml</directory>
 									<filtering>true</filtering>
 								</resource>
 							</resources>

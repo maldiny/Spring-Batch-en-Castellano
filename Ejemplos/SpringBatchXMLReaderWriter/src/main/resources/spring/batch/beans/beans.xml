@@ -39,7 +39,7 @@
 	</bean>
 	<bean id="xmlItemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
 	    <property name="resource" value="file:xml/output/output.xml" />
-	    <property name="marshaller" ref="xmlItemWriterUnmarshaller" />
+	    <property name="marshaller" ref="xmlItemReaderUnmarshaller" />
 	    <property name="rootTagName" value="items" />
 	</bean>
 	

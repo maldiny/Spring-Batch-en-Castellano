@@ -22,7 +22,7 @@ public class Main {
 		ApplicationContext context = new ClassPathXmlApplicationContext(springConfig);
 
 		JobLauncher jobLauncher = (JobLauncher) context.getBean("jobLauncher");
-		Job job = (Job) context.getBean("taskletJob");
+		Job job = (Job) context.getBean("scopesJob");
 		
 		Map<String, JobParameter> parameters = new HashMap<String, JobParameter>();
 		parameters.put("customStepScopeParameter", new JobParameter("myCustomStepScopeParameterValue"));

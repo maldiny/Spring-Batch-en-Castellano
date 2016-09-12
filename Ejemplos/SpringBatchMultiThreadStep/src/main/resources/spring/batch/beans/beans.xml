@@ -13,6 +13,6 @@
 	<bean id="customWriter" class="com.maldiny.spring.batch.springbatchmultithreadstep.CustomWriter" />
 	
 	<bean id="taskExecutor" class="org.springframework.core.task.SimpleAsyncTaskExecutor">
-    	<property name="concurrencyLimit" value="1"/>
+    	<property name="concurrencyLimit" value="3"/>
 	</bean>
 </beans>
