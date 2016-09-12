@@ -83,5 +83,5 @@ Una vez modificado, lanzamos el proceso batch y accedemos a la url del portal Sp
 
 > http://localhost:8080/SpringBatchAdminWeb/jobs
 
-<p align="center"><img src="..//..//Imagenes//[Maldiny]_MultithreadStep_ejecucion.png"></p>
+<p align="center"><img src="..//..//Imagenes//[Maldiny]_MultiThreadStep_ejecucion.png"></p>
 
