@@ -1,6 +1,6 @@
 # Spring Batch Archetype
 
-El <a href="https://maven.apache.org/guides/introduction/introduction-to-archetypes.html" target="_blank">arquetipo</a> maven facilita la creación de proyectos batch utilizando el framework Spring Batch.
+El [arquetipo](https://maven.apache.org/guides/introduction/introduction-to-archetypes.html) maven facilita la creación de proyectos batch utilizando el framework Spring Batch.
 
 ## Utilización
 
