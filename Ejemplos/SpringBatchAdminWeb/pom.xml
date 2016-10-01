@@ -572,22 +572,22 @@
     </pluginRepository>
   </pluginRepositories>
   <build>
-    <sourceDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/java</sourceDirectory>
-    <scriptSourceDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/scripts</scriptSourceDirectory>
-    <testSourceDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/test/java</testSourceDirectory>
-    <outputDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/target/classes</outputDirectory>
-    <testOutputDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/target/test-classes</testOutputDirectory>
+    <sourceDirectory>src/main/java</sourceDirectory>
+    <scriptSourceDirectory>src/main/scripts</scriptSourceDirectory>
+    <testSourceDirectory>src/test/java</testSourceDirectory>
+    <outputDirectory>target/classes</outputDirectory>
+    <testOutputDirectory>target/test-classes</testOutputDirectory>
     <resources>
       <resource>
-        <directory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/main/resources</directory>
+        <directory>src/main/resources</directory>
       </resource>
     </resources>
     <testResources>
       <testResource>
-        <directory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/src/test/resources</directory>
+        <directory>src/test/resources</directory>
       </testResource>
     </testResources>
-    <directory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/target</directory>
+    <directory>target</directory>
     <finalName>SpringBatchAdmin-2.0.0.BUILD-SNAPSHOT</finalName>
     <pluginManagement>
       <plugins>
@@ -831,7 +831,7 @@
               <goal>site</goal>
             </goals>
             <configuration>
-              <outputDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/target/site</outputDirectory>
+              <outputDirectory>target/site</outputDirectory>
               <reportPlugins>
                 <reportPlugin>
                   <groupId>org.apache.maven.plugins</groupId>
@@ -880,7 +880,7 @@
               <goal>deploy</goal>
             </goals>
             <configuration>
-              <outputDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/target/site</outputDirectory>
+              <outputDirectory>target/site</outputDirectory>
               <reportPlugins>
                 <reportPlugin>
                   <groupId>org.apache.maven.plugins</groupId>
@@ -932,7 +932,7 @@
           </dependency>
         </dependencies>
         <configuration>
-          <outputDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/target/site</outputDirectory>
+          <outputDirectory>target/site</outputDirectory>
           <reportPlugins>
             <reportPlugin>
               <groupId>org.apache.maven.plugins</groupId>
@@ -977,7 +977,7 @@
     </plugins>
   </build>
   <reporting>
-    <outputDirectory>/home/ru/Escritorio/spring-batch-admin-master/SpringBatchAdmin/target/site</outputDirectory>
+    <outputDirectory>target/site</outputDirectory>
     <plugins>
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
