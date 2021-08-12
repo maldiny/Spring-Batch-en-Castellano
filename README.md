@@ -365,7 +365,7 @@ Este componente genérico permite configurar los siguientes aspectos de su imple
             </bean>
         </property>
         <property name="fieldSetMapper">
-            <bean class="com.everis.uco.spring.batch….MyObjectFieldSetMapper" />
+            <bean class="com.maldiny.spring.batch….MyObjectFieldSetMapper" />
         </property>
         </bean>
     </property>
@@ -509,7 +509,7 @@ Los **ItemWriters** definirán el modo en el que la información tras ser proces
     		</value>
 	</property>
 	<property name="ItemPreparedStatementSetter">
-    		<bean class="com.everis.....CustomItemSetter" />
+    		<bean class="com.maldiny.....CustomItemSetter" />
 	</property>
 </bean>
 ```
